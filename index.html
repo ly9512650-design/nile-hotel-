@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فندق النيل - تجربة إقامة لا تُنسى</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --gold: #C5A059;
+            --gold-light: #E8D5A3;
+            --gold-dark: #9A7B3D;
+            --navy: #0A1628;
+            --navy-light: #152238;
+            --cream: #F8F5F0;
+            --white: #FFFFFF;
+            --gray: #6B7280;
+            --gray-light: #E5E7EB;
+            --dark: #1A1A1A;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--cream);
+            color: var(--dark);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--cream);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 5px;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 22, 40, 0.97);
+            backdrop-filter: blur(20px);
+            padding: 0.7rem 5%;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-logo i {
+            color: var(--gold);
+            font-size: 1.4rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: all 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            padding: 0.7rem 2rem;
+            background: var(--gold);
+            color: var(--navy);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-cta:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.3);
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(10,22,40,0.6) 0%, rgba(10,22,40,0.3) 50%, rgba(10,22,40,0.8) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(197, 160, 89, 0.2);
+            border: 1px solid var(--gold);
+            color: var(--gold-light);
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero-desc {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.6s both;
+            font-weight: 300;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.9s both;
+        }
+
+        .btn {
+            padding: 1.1rem 2.8rem;
+            border-radius: 50px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            border: none;
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: var(--navy);
+            box-shadow: 0 10px 40px rgba(197, 160, 89, 0.4);
+        }
+
+        .btn-gold:hover {
+            background: var(--gold-light);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(197, 160, 89, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+
+        .btn-outline:hover {
+            background: var(--white);
+            color: var(--navy);
+            border-color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .hero-dots {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.8rem;
+            z-index: 3;
+        }
+
+        .hero-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .hero-dot.active {
+            background: var(--gold);
+            border-color: var(--white);
+            transform: scale(1.2);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 2rem;
+            right: 3rem;
+            z-index: 3;
+            color: var(--white);
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        /* ===== BOOKING BAR ===== */
+        .booking-bar {
+            background: var(--white);
+            padding: 2rem 5%;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            z-index: 10;
+            margin-top: -4rem;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) auto;
+            gap: 1.5rem;
+            align-items: end;
+        }
+
+        .booking-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .booking-group label {
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .booking-group label i {
+            color: var(--gold);
+        }
+
+        .booking-group input,
+        .booking-group select {
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: var(--cream);
+        }
+
+        .booking-group input:focus,
+        .booking-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.1);
+        }
+
+        .booking-btn {
+            padding: 1rem 2rem;
+            background: var(--navy);
+            color: var(--gold);
+            border: none;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            height: fit-content;
+        }
+
+        .booking-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-2px);
+        }
+
+        /* ===== SECTIONS ===== */
+        section {
+            padding: 6rem 5%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== ABOUT ===== */
+        .about {
+            background: var(--white);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .about-images {
+            position: relative;
+        }
+
+        .about-img-main {
+            width: 85%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-img-sub {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            width: 50%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 5px solid var(--white);
+            box-shadow: var(--shadow-lg);
+            z-index: 3;
+        }
+
+        .about-img-accent {
+            position: absolute;
+            top: -20px;
+            right: 10%;
+            width: 120px;
+            height: 120px;
+            border: 4px solid var(--gold);
+            border-radius: 20px;
+            z-index: 1;
+        }
+
+        .about-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--navy);
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .about-content p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 2;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            background: var(--cream);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .feature-item:hover {
+            background: var(--navy);
+            color: var(--white);
+            transform: translateX(-5px);
+        }
+
+        .feature-item i {
+            color: var(--gold);
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        /* ===== ROOMS ===== */
+        .rooms {
+            background: linear-gradient(to bottom, var(--cream), var(--white));
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .room-card {
+            background: var(--white);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .room-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .room-image {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .room-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s;
+        }
+
+        .room-card:hover .room-image img {
+            transform: scale(1.1);
+        }
+
+        .room-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--gold);
+            color: var(--navy);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            z-index: 2;
+        }
+
+        .room-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 1.5rem 1.5rem;
+            background: linear-gradient(to top, rgba(10,22,40,0.8), transparent);
+            color: var(--white);
+        }
+
+        .room-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .room-price span {
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .room-content {
+            padding: 1.8rem;
+        }
+
+        .room-content h4 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .room-content p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.7;
+        }
+
+        .room-features {
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .room-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .room-feature i {
+            color: var(--gold);
+        }
+
+        .room-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--navy);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .room-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        /* ===== AMENITIES ===== */
+        .amenities {
+            background: var(--navy);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .amenities::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(197,160,89,0.1) 0%, transparent 70%);
+        }
+
+        .amenities .section-header h2 {
+            color: var(--white);
+        }
+
+        .amenities .section-header p {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .amenity-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2.5rem 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .amenity-card:hover {
+            background: rgba(197, 160, 89, 0.15);
+            border-color: var(--gold);
+            transform: translateY(-10px);
+        }
+
+        .amenity-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(197, 160, 89, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: var(--gold);
+            transition: all 0.3s;
+        }
+
+        .amenity-card:hover .amenity-icon {
+            background: var(--gold);
+            color: var(--navy);
+            transform: rotateY(360deg);
+        }
+
+        .amenity-card h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .amenity-card p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* ===== GALLERY ===== */
+        .gallery-section {
+            background: var(--white);
+        }
+
+        .gallery-masonry {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 280px;
+            gap: 1.2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            group: true;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.15);
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10,22,40,0.8) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            color: var(--white);
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-caption h5 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .gallery-caption span {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .gallery-item:nth-child(1) { grid-row: span 2; }
+        .gallery-item:nth-child(4) { grid-column: span 2; }
+        .gallery-item:nth-child(6) { grid-row: span 2; }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            background: var(--cream);
+        }
+
+        .testimonials-slider {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .testimonial-slide {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.6s;
+        }
+
+        .testimonial-slide.active {
+            display: block;
+        }
+
+        .testimonial-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--gold);
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .testimonial-stars {
+            color: var(--gold);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--navy);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .testimonial-author h5 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.3rem;
+        }
+
+        .testimonial-author span {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .testimonial-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--gray-light);
+            background: var(--white);
+            color: var(--navy);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-btn:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--navy);
+        }
+
+        /* ===== CONTACT / CTA ===== */
+        .cta-section {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 8rem 5%;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800') center/cover;
+            opacity: 0.15;
+        }
+
+        .cta-content {
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .cta-content p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.9;
+        }
+
+        .cta-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .cta-info-item i {
+            width: 45px;
+            height: 45px;
+            background: rgba(197, 160, 89, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--navy);
+            color: var(--white);
+            padding: 5rem 5% 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 4rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-brand h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+        }
+
+        .footer-brand p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-social a {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .footer-social a:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-3px);
+        }
+
+        .footer-col h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+        }
+
+        .footer-col a {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--gold);
+            padding-right: 5px;
+        }
+
+        .footer-contact p {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .footer-contact i {
+            color: var(--gold);
+            margin-top: 0.3rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--navy);
+            color: var(--white);
+            padding: 1.2rem 2.5rem;
+            border-radius: 14px;
+            box-shadow: var(--shadow-xl);
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-right: 4px solid var(--gold);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast i {
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .rooms-grid { grid-template-columns: repeat(2, 1fr); }
+            .amenities-grid { grid-template-columns: repeat(2, 1fr); }
+            .gallery-masonry { grid-template-columns: repeat(2, 1fr); }
+            .gallery-item:nth-child(1),
+            .gallery-item:nth-child(6) { grid-row: span 1; }
+            .gallery-item:nth-child(4) { grid-column: span 1; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-cta { display: none; }
+            .mobile-toggle { display: block; }
+            
+            .hero h1 { font-size: 2.5rem; }
+            .hero-desc { font-size: 1.1rem; }
+            
+            .booking-bar {
+                grid-template-columns: 1fr;
+                margin-top: -2rem;
+            }
+            
+            .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .about-img-main { width: 100%; height: 350px; }
+            .about-img-sub { display: none; }
+            .features-list { grid-template-columns: 1fr; }
+            
+            .rooms-grid { grid-template-columns: 1fr; }
+            .amenities-grid { grid-template-columns: 1fr; }
+            .gallery-masonry { grid-template-columns: 1fr; grid-auto-rows: 250px; }
+            
+            .section-header h2 { font-size: 2rem; }
+            .testimonial-text { font-size: 1.1rem; }
+            
+            .footer-grid { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
+            .footer-social { justify-content: center; }
+            .footer-contact p { justify-content: center; }
+            
+            .cta-content h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="nav-logo">
+            <i class="fas fa-hotel"></i>
+            فندق النيل
+        </a>
+        <ul class="nav-links">
+            <li><a href="#home">الرئيسية</a></li>
+            <li><a href="#about">من نحن</a></li>
+            <li><a href="#rooms">الغرف</a></li>
+            <li><a href="#amenities">الخدمات</a></li>
+            <li><a href="#gallery">معرض الصور</a></li>
+            <li><a href="#testimonials">الآراء</a></li>
+        </ul>
+        <a href="#contact" class="nav-cta">
+            <i class="fas fa-calendar-alt"></i>
+            احجز الآن
+        </a>
+        <button class="mobile-toggle" id="mobileToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Slider -->
+    <section class="hero" id="home">
+        <div class="hero-slider">
+            <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920')"></div>
+            <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1920')"></div>
+            <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1920')"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-crown"></i>
+                فندق 5 نجوم - القاهرة
+            </div>
+            <h1>تجربة إقامة <span>فاخرة</span><br>على ضفاف النيل</h1>
+            <p class="hero-desc">استمتع بأرقى مستويات الضيافة المصرية في قلب القاهرة، حيث يلتقي التراث العريق بالرفاهية العصرية</p>
+            <div class="hero-buttons">
+                <a href="#rooms" class="btn btn-gold">
+                    <i class="fas fa-bed"></i>
+                    استكشف الغرف
+                </a>
+                <a href="#contact" class="btn btn-outline">
+                    <i class="fas fa-play"></i>
+                    شاهد الفيديو
+                </a>
+            </div>
+        </div>
+        
+        <div class="hero-dots">
+            <div class="hero-dot active" data-slide="0"></div>
+            <div class="hero-dot" data-slide="1"></div>
+            <div class="hero-dot" data-slide="2"></div>
+        </div>
+        
+        <div class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Booking Bar -->
+    <div class="booking-bar reveal">
+        <div class="booking-group">
+            <label><i class="fas fa-calendar-check"></i> تاريخ الوصول</label>
+            <input type="date" id="checkIn">
+        </div>
+        <div class="booking-group">
+            <label><i class="fas fa-calendar-minus"></i> تاريخ المغادرة</label>
+            <input type="date" id="checkOut">
+        </div>
+        <div class="booking-group">
+            <label><i class="fas fa-user-friends"></i> النزلاء</label>
+            <select>
+                <option>1 بالغ</option>
+                <option>2 بالغين</option>
+                <option>2 بالغين + طفل</option>
+                <option>عائلة (4 أشخاص)</option>
+            </select>
+        </div>
+        <div class="booking-group">
+            <label><i class="fas fa-door-open"></i> نوع الغرفة</label>
+            <select>
+                <option>غرفة قياسية</option>
+                <option>جناح ديلوكس</option>
+                <option>جناح جونيور</option>
+                <option>جناح رئاسي</option>
+            </select>
+        </div>
+        <button class="booking-btn" onclick="checkAvailability()">
+            <i class="fas fa-search"></i>
+            تحقق من التوفر
+        </button>
+    </div>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="section-header reveal">
+            <span class="section-label">من نحن</span>
+            <h2>وجهتك المثالية للإقامة الفاخرة</h2>
+            <p>نقدم لك تجربة لا تُنسى تجمع بين الأصالة المصرية والخدمة العالمية</p>
+        </div>
+        
+        <div class="about-grid">
+            <div class="about-images reveal">
+                <div class="about-img-accent"></div>
+                <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800" alt="الفندق" class="about-img-main">
+                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600" alt="الاستقبال" class="about-img-sub">
+            </div>
+            <div class="about-content reveal">
+                <h3>فخامة تليق بك على ضفاف أطول نهر في العالم</h3>
+                <p>يقع فندق النيل في قلب القاهرة التاريخية، حيث يمكنك الاستمتاع بإطلالة بانورامية خلابة على نهر النيل العظيم. منذ افتتاحنا عام 1985، نسعى دائماً لتقديم أعلى مستويات الضيافة والرفاهية لنزلائنا الكرام.</p>
+                <p>يضم الفندق 250 غرفة وجناحاً فاخراً، 5 مطاعم عالمية، سبا متكامل، ومركز مؤتمرات مجهز بأحدث التقنيات. كل تفصيل صُمم بعناية لضمان راحتك وإرضاء ذوقك الرفيع.</p>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-wifi"></i>
+                        <span>واي فاي مجاني</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-swimming-pool"></i>
+                        <span>مسبح إنفينيتي</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-spa"></i>
+                        <span>سبا ومساج</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-dumbbell"></i>
+                        <span>جيم 24 ساعة</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-utensils"></i>
+                        <span>5 مطاعم</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-car"></i>
+                        <span>موقف سيارات</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rooms Section -->
+    <section class="rooms" id="rooms">
+        <div class="section-header reveal">
+            <span class="section-label">إقامتنا</span>
+            <h2>غرف وأجنحة فاخرة</h2>
+            <p>اختر من بين تشكيلتنا الواسعة من الغرف والأجنحة المصممة لتلبية جميع احتياجاتك</p>
+        </div>
+        
+        <div class="rooms-grid">
+            <div class="room-card reveal">
+                <div class="room-image">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600" alt="غرفة قياسية">
+                    <span class="room-badge">الأكثر طلباً</span>
+                    <div class="room-overlay">
+                        <div class="room-price">1,200 <span>ج.م/ليلة</span></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <h4>غرفة قياسية مطلة على النيل</h4>
+                    <p>غرفة أنيقة بمساحة 35 م² مع إطلالة خلابة على النيل وكل وسائل الراحة الحديثة</p>
+                    <div class="room-features">
+                        <div class="room-feature"><i class="fas fa-bed"></i> سرير كينج</div>
+                        <div class="room-feature"><i class="fas fa-user"></i> 2 نزيل</div>
+                        <div class="room-feature"><i class="fas fa-expand"></i> 35 م²</div>
+                        <div class="room-feature"><i class="fas fa-water"></i> إطلالة نيلية</div>
+                    </div>
+                    <button class="room-btn" onclick="bookRoom('غرفة قياسية')">
+                        احجز الآن <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="room-card reveal">
+                <div class="room-image">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600" alt="جناح ديلوكس">
+                    <div class="room-overlay">
+                        <div class="room-price">2,500 <span>ج.م/ليلة</span></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <h4>جناح ديلوكس</h4>
+                    <p>جناح فاخر بمساحة 55 م² يضم غرفة معيشة منفصلة وحمام بجاكوزي</p>
+                    <div class="room-features">
+                        <div class="room-feature"><i class="fas fa-bed"></i> سرير كينج</div>
+                        <div class="room-feature"><i class="fas fa-user"></i> 2 نزيل</div>
+                        <div class="room-feature"><i class="fas fa-expand"></i> 55 م²</div>
+                        <div class="room-feature"><i class="fas fa-hot-tub"></i> جاكوزي</div>
+                    </div>
+                    <button class="room-btn" onclick="bookRoom('جناح ديلوكس')">
+                        احجز الآن <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="room-card reveal">
+                <div class="room-image">
+                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600" alt="جناح رئاسي">
+                    <span class="room-badge">VIP</span>
+                    <div class="room-overlay">
+                        <div class="room-price">5,000 <span>ج.م/ليلة</span></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <h4>الجناح الرئاسي</h4>
+                    <p>قمة الفخامة بمساحة 120 م² مع مطبخ خاص، صالة استقبال، وخدمة بتلر 24 ساعة</p>
+                    <div class="room-features">
+                        <div class="room-feature"><i class="fas fa-bed"></i> 2 سرير كينج</div>
+                        <div class="room-feature"><i class="fas fa-user"></i> 4 نزلاء</div>
+                        <div class="room-feature"><i class="fas fa-expand"></i> 120 م²</div>
+                        <div class="room-feature"><i class="fas fa-concierge-bell"></i> بتلر خاص</div>
+                    </div>
+                    <button class="room-btn" onclick="bookRoom('الجناح الرئاسي')">
+                        احجز الآن <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Amenities -->
+    <section class="amenities" id="amenities">
+        <div class="section-header reveal">
+            <span class="section-label">خدماتنا</span>
+            <h2>وسائل الراحة والترفيه</h2>
+            <p>كل ما تحتاجه لإقامة مثالية تحت سقف واحد</p>
+        </div>
+        
+        <div class="amenities-grid">
+            <div class="amenity-card reveal">
+                <div class="amenity-icon"><i class="fas fa-swimming-pool"></i></div>
+                <h4>مسبح إنفينيتي</h4>
+                <p>مسبح بإطلالة بانورامية على النيل مع خدمة مشروبات مميزة</p>
+            </div>
+            <div class="amenity-card reveal">
+                <div class="amenity-icon"><i class="fas fa-spa"></i></div>
+                <h4>النيل سبا</h4>
+                <p>جلسات مساج وعلاجات استرخاء بأيدي متخصصين</p>
+            </div>
+            <div class="amenity-card reveal">
+                <div class="amenity-icon"><i class="fas fa-utensils"></i></div>
+                <h4>مطاعم فاخرة</h4>
+                <p>5 مطاعم تقدم أشهى المأكولات العالمية والمصرية</p>
+            </div>
+            <div class="amenity-card reveal">
+                <div class="amenity-icon"><i class="fas fa-dumbbell"></i></div>
+                <h4>مركز اللياقة</h4>
+                <p>صالة ألعاب رياضية مجهزة بأحدث الأجهزة طوال اليوم</p>
+            </div>
+            <div class="amenity-card reveal">
+                <div class="amenity-icon"><i class="fas fa-briefcase"></i></div>
+                <h4>مركز الأعمال</h4>
+                <p>قاعات اجتماعات ومؤتمرات مع تقنيات الصوت والصورة</p>
+            </div>
+            <div class="amenity-card reveal">
+                <div class="amenity-icon"><i class="fas fa-shuttle-van"></i></div>
+                <h4>خدمة النقل</h4>
+                <p>مواصلات من وإلى المطار بسيارات فاخرة</p>
+            </div>
+            <div class="amenity-card reveal">
+                <div class="amenity-icon"><i class="fas fa-baby"></i></div>
+                <h4>نادي الأطفال</h4>
+                <p>أنشطة ترفيهية وتعليمية بإشراف متخصصين</p>
+            </div>
+            <div class="amenity-card reveal">
+                <div class="amenity-icon"><i class="fas fa-glass-cheers"></i></div>
+                <h4>تراس الروف</h4>
+                <p>استمتع بأجمل غروب شمس على النيل مع مشروباتك المفضلة</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery-section" id="gallery">
+        <div class="section-header reveal">
+            <span class="section-label">معرض الصور</span>
+            <h2>لحظات من فندق النيل</h2>
+            <p>استكشف جمال الفندق وأجوائه الفاخرة</p>
+        </div>
+        
+        <div class="gallery-masonry">
+            <div class="gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800" alt="الردهة">
+                <div class="gallery-caption">
+                    <h5>الردهة الرئيسية</h5>
+                    <span>استقبال 24 ساعة</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600" alt="المسبح">
+                <div class="gallery-caption">
+                    <h5>المسبح الخارجي</h5>
+                    <span>إطلالة على النيل</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600" alt="المطعم">
+                <div class="gallery-caption">
+                    <h5>مطعم النيل</h5>
+                    <span>أشهى المأكولات</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800" alt="الغرفة">
+                <div class="gallery-caption">
+                    <h5>جناح ديلوكس</h5>
+                    <span>فخامة وراحة</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600" alt="السبا">
+                <div class="gallery-caption">
+                    <h5>النيل سبا</h5>
+                    <span>استرخاء تام</span>
+                </div>
+            </div>
+            <div class="gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600" alt="التراس">
+                <div class="gallery-caption">
+                    <h5>تراس الروف</h5>
+                    <span>إطلالة بانورامية</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header reveal">
+            <span class="section-label">آراء النزلاء</span>
+            <h2>ما يقوله ضيوفنا عنا</h2>
+            <p>نفتخر بآراء نزلائنا ونسعى دائماً لتجاوز توقعاتهم</p>
+        </div>
+        
+        <div class="testimonials-slider reveal">
+            <div class="testimonial-slide active">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200" alt="نزيل" class="testimonial-avatar">
+                <div class="testimonial-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">"تجربة لا تُنسى! الإطلالة على النيل من غرفتي كانت ساحرة، والخدمة كانت بمستوى عالمي. بالتأكيد سأعود مرة أخرى."</p>
+                <div class="testimonial-author">
+                    <h5>أحمد خالد</h5>
+                    <span>رجل أعمال - دبي</span>
+                </div>
+            </div>
+            
+            <div class="testimonial-slide">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200" alt="نزيل" class="testimonial-avatar">
+                <div class="testimonial-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">"قضيت أسبوع العسل هنا وكانت التجربة رائعة. الجناح الرئاسي فاخر جداً والسبا كان مذهلاً. شكراً لفريق العمل الرائع!"</p>
+                <div class="testimonial-author">
+                    <h5>سارة ومحمد</h5>
+                    <span>عرسان - القاهرة</span>
+                </div>
+            </div>
+            
+            <div class="testimonial-slide">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" alt="نزيل" class="testimonial-avatar">
+                <div class="testimonial-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="testimonial-text">"أفضل فندق في القاهرة من حيث الموقع والخدمة. المطاعم ممتازة وموقع الفندق قريب من الأهرامات والمتاحف. مكان مثالي للاستكشاف."</p>
+                <div class="testimonial-author">
+                    <h5>جون سميث</h5>
+                    <span>سائح - لندن</span>
+                </div>
+            </div>
+            
+            <div class="testimonial-nav">
+                <button class="testimonial-btn" onclick="changeSlide(-1)"><i class="fas fa-arrow-right"></i></button>
+                <button class="testimonial-btn" onclick="changeSlide(1)"><i class="fas fa-arrow-left"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / Contact -->
+    <section class="cta-section" id="contact">
+        <div class="cta-content reveal">
+            <h2>احجز إقامتك الفاخرة اليوم</h2>
+            <p>تواصل معنا الآن واحصل على خصم 20% على حجزك الأول. فريقنا جاهز لخدمتك على مدار الساعة.</p>
+            
+            <div class="cta-info">
+                <div class="cta-info-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>0123-456-7890</span>
+                </div>
+                <div class="cta-info-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>reservations@nilhotel.com</span>
+                </div>
+                <div class="cta-info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>123 كورنيش النيل، القاهرة، مصر</span>
+                </div>
+            </div>
+            
+            <a href="#" class="btn btn-gold" onclick="showToast('سيتم توجيهك لصفحة الحجز')">
+                <i class="fas fa-calendar-check"></i>
+                احجز الآن واحصل على الخصم
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3><i class="fas fa-hotel"></i> فندق النيل</h3>
+                <p>وجهتك المثالية للإقامة الفاخرة في قلب القاهرة. نقدم لك تجربة لا تُنسى تجمع بين الأصالة المصرية والخدمة العالمية منذ عام 1985.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h4>روابط سريعة</h4>
+                <a href="#about">من نحن</a>
+                <a href="#rooms">الغرف والأجنحة</a>
+                <a href="#amenities">الخدمات</a>
+                <a href="#gallery">معرض الصور</a>
+                <a href="#testimonials">الآراء</a>
+            </div>
+            
+            <div class="footer-col">
+                <h4>المعلومات</h4>
+                <a href="#">سياسة الحجز</a>
+                <a href="#">الأسئلة الشائعة</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">خريطة الموقع</a>
+            </div>
+            
+            <div class="footer-col footer-contact">
+                <h4>تواصل معنا</h4>
+                <p><i class="fas fa-map-marker-alt"></i> 123 كورنيش النيل، القاهرة، مصر</p>
+                <p><i class="fas fa-phone-alt"></i> 0123-456-7890</p>
+                <p><i class="fas fa-envelope"></i> info@nilhotel.com</p>
+                <p><i class="fas fa-clock"></i> استقبال 24 ساعة / 7 أيام</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2024 فندق النيل. جميع الحقوق محفوظة. | صنع بـ <i class="fas fa-heart" style="color: var(--gold);"></i> في مصر</p>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">تمت العملية بنجاح!</span>
+    </div>
+
+    <script>
+        // Navbar Scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Hero Slider
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.hero-dot');
+        let currentSlide = 0;
+
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => goToSlide(i));
+        });
+
+        setInterval(() => {
+            goToSlide((currentSlide + 1) % slides.length);
+        }, 6000);
+
+        // Scroll Reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Testimonials Slider
+        let testimonialIndex = 0;
+        const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+
+        function changeSlide(direction) {
+            testimonialSlides[testimonialIndex].classList.remove('active');
+            testimonialIndex = (testimonialIndex + direction + testimonialSlides.length) % testimonialSlides.length;
+            testimonialSlides[testimonialIndex].classList.add('active');
+        }
+
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function bookRoom(roomName) {
+            showToast('تم حجز ' + roomName + ' بنجاح! سنتواصل معك قريباً.');
+        }
+
+        function checkAvailability() {
+            const checkIn = document.getElementById('checkIn').value;
+            const checkOut = document.getElementById('checkOut').value;
+            if (!checkIn || !checkOut) {
+                showToast('الرجاء اختيار تواريخ الوصول والمغادرة');
+                return;
+            }
+            showToast('الغرف متاحة! يمكنك المتابعة مع الحجز.');
+        }
+
+        // Mobile Menu
+        document.getElementById('mobileToggle').addEventListener('click', () => {
+            const nav = document.querySelector('.nav-links');
+            if (nav.style.display === 'flex') {
+                nav.style.display = 'none';
+            } else {
+                nav.style.display = 'flex';
+                nav.style.position = 'absolute';
+                nav.style.top = '100%';
+                nav.style.left = '0';
+                nav.style.right = '0';
+                nav.style.background = 'rgba(10,22,40,0.98)';
+                nav.style.flexDirection = 'column';
+                nav.style.padding = '2rem';
+                nav.style.gap = '1.5rem';
+            }
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Set default dates
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('checkIn').valueAsDate = today;
+        document.getElementById('checkOut').valueAsDate = tomorrow;
+    </script>
+</body>
+</html>
